@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+  <channel>
+    <title>{{ rss_title }}</title>
+    <atom:link href='{{ rss_link }}' rel='self' type='application/rss+xml'/>
+    <link>{{ home_link }}</link>
+    <description>{{ rss_desc }}</description>
+    <language>en-us</language>
+    <pubDate>{{ utc }}</pubDate>
+    <lastBuildDate>{{ builddate }}</lastBuildDate>
+{% for item in items %}
+    <item>
+      <title><![CDATA[{{ item.title }}]]></title>
+      <pubDate>{{ item.pubdate }}</pubDate>
+      <guid isPermaLink='true'>{{ item.link }}</guid>
+      <link><![CDATA[{{ item.link }}]]></link>
+      <description><![CDATA[
+{% for url in item.images %}
+        <div>
+          <img style='margin: 6px 0 6px 0; max-width: 300px; width: expression((this.width > 300) && (this.width >= this.height) ? 300: true); max-height: 300px; height: expression((this.height > 300) && (this.height >= this.width) ? 300: true); border: none;'
+                src='{{ url }}'/>
+        </div>
+{% endfor %}
+        <div>
+        <br>{{ item.header|safe }}<br>
+        </div>
+        <div>
+        {{ item.text|safe }}<br>
+        </div>
+      ]]></description>
+    </item>
+{% endfor %}
+  </channel>
+</rss>
+
