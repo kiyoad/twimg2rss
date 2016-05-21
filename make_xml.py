@@ -1,38 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from configparser import ConfigParser
 import datetime
 import jinja2
 import json
 import os
 import sys
 import shutil
-from logging import FileHandler, Formatter, getLogger, DEBUG
-
+from common import conf, logger
 
 RSS_TITLE = 'twimg2rss'
 RSS_DESC = 'Images in my Twitter home timeline'
 RSS_TEMPLATE_J2_FILE = 'twimg2rss.xml.j2'
-
-config = ConfigParser()
-config.read(os.path.abspath(os.path.dirname(__file__)) + '/config.ini')
-timeline_json_file = config.get('DEFAULT', 'timeline_json_file')
-log_timeline_json_dir = config.get('DEFAULT', 'log_timeline_json_dir')
-rss_xml_file = config.get('DEFAULT', 'rss_xml_file')
-release_rss_xml_file = config.get('DEFAULT', 'release_rss_xml_file')
-rss_xml_url = config.get('DEFAULT', 'rss_xml_url')
-homepage_url = config.get('DEFAULT', 'homepage_url')
-time_difference_from_utc = config.get('DEFAULT', 'time_difference_from_utc')
-
-log_file = config.get('DEFAULT', 'log_file')
-handler = FileHandler(filename=log_file)
-form = Formatter(
-    fmt='%(asctime)s %(levelname)s %(module)s "%(message)s"')
-handler.setFormatter(form)
-logger = getLogger(__name__)
-logger.setLevel(DEBUG)
-logger.addHandler(handler)
 
 
 def create_media_timeline_item(media_timeline_list,
@@ -107,7 +86,7 @@ def create_rss_xml_items(media_timeline_list, rss_xml_items):
             item['screen_name'], tmpl.render(text=item['name']))
         dt = '{0:%Y/%m/%d %H:%M:%S}'.format(
             item['created_at'] + datetime.timedelta(
-                hours=int(time_difference_from_utc)))
+                hours=int(conf.time_difference_from_utc())))
         rss_xml_item['header'] = '{0} @{1} {2}'.format(
             header_name, item['screen_name'], dt)
         rss_xml_item['pubdate'] = '{0:%a, %d %b %Y %H:%M:%S +0000}'.format(
@@ -129,8 +108,8 @@ def create_rss_xml_items(media_timeline_list, rss_xml_items):
 def create_rss_xml(rss_xml_items, tmpl, newest_created_at, file):
     file.write(tmpl.render(
         rss_title=RSS_TITLE,
-        rss_link=rss_xml_url,
-        home_link=homepage_url,
+        rss_link=conf.rss_xml_url(),
+        home_link=conf.homepage_url(),
         rss_desc=RSS_DESC,
         utc='{0:%a, %d %b %Y %H:%M:%S +0000}'.format(newest_created_at),
         builddate='{0:%a, %d %b %Y %H:%M:%S +0000}'.format(
@@ -145,7 +124,7 @@ def make_xml():
         autoescape=True)
     tmpl = jinja2_env.get_template(RSS_TEMPLATE_J2_FILE)
 
-    with open(timeline_json_file, 'r') as file:
+    with open(conf.timeline_json_file(), 'r') as file:
         req_text = file.read()
 
     media_timeline_list = []
@@ -159,7 +138,7 @@ def make_xml():
     rss_xml_items = []
     create_rss_xml_items(media_timeline_list, rss_xml_items)
 
-    with open(rss_xml_file, 'w') as file:
+    with open(conf.rss_xml_file(), 'w') as file:
         create_rss_xml(rss_xml_items, tmpl, newest_created_at, file)
 
     logger.info('max_parsed_id = {0}'.format(max_parsed_id))
@@ -169,9 +148,9 @@ def make_xml():
     logger.info('media timeline count = {0}'.format(mt_count))
 
     log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
-        log_timeline_json_dir, datetime.datetime.now())
-    shutil.move(timeline_json_file, log_timeline_json_file)
-    shutil.copy(rss_xml_file, release_rss_xml_file)
+        conf.log_timeline_json_dir(), datetime.datetime.now())
+    shutil.move(conf.timeline_json_file(), log_timeline_json_file)
+    shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
 
 
 def main():
