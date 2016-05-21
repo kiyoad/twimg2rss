@@ -14,6 +14,18 @@ RSS_DESC = 'Images in my Twitter home timeline'
 RSS_TEMPLATE_J2_FILE = 'twimg2rss.xml.j2'
 
 
+def ng_word_check(tweet, url_expurl_dic):
+    values = url_expurl_dic.values()
+    for ngw in conf.ng_word_list():
+        if ngw in tweet['text']:
+            return False
+        for v in values:
+            if ngw in v:
+                return False
+
+    return True
+
+
 def create_media_timeline_item(media_timeline_list,
                                tweet, media_urls_list, url_expurl_dic):
     item = {}
@@ -68,7 +80,7 @@ def parse_timeline(req_text, media_timeline_list):
                                  url_expurl_dic)
         parse_urls_entities(tweet['entities'], url_expurl_dic)
 
-        if len(media_urls_list) > 0:
+        if len(media_urls_list) > 0 and ng_word_check(tweet, url_expurl_dic):
             create_media_timeline_item(media_timeline_list,
                                        tweet, media_urls_list, url_expurl_dic)
 

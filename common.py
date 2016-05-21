@@ -51,6 +51,10 @@ class MyConfig:
     def log_file(self):
         return self.config.get('DEFAULT', 'log_file')
 
+    def ng_word_list(self):
+        return self.config.get('DEFAULT', 'ng_word_list',
+                               fallback='').splitlines()
+
 
 conf = MyConfig()
 
