@@ -26,6 +26,21 @@ def ng_word_check(tweet, url_expurl_dic):
     return True
 
 
+all_url_set = set()
+
+
+def delete_duplicate(url_expurl_dic):
+    urls = url_expurl_dic.values()
+    for url in urls:
+        if url in all_url_set:
+            return False
+
+    for url in urls:
+        all_url_set.add(url)
+
+    return True
+
+
 def create_media_timeline_item(media_timeline_list,
                                tweet, media_urls_list, url_expurl_dic):
     item = {}
@@ -80,7 +95,8 @@ def parse_timeline(req_text, media_timeline_list):
                                  url_expurl_dic)
         parse_urls_entities(tweet['entities'], url_expurl_dic)
 
-        if len(media_urls_list) > 0 and ng_word_check(tweet, url_expurl_dic):
+        if len(media_urls_list) > 0 and ng_word_check(
+                tweet, url_expurl_dic) and delete_duplicate(url_expurl_dic):
             create_media_timeline_item(media_timeline_list,
                                        tweet, media_urls_list, url_expurl_dic)
 
