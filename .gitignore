@@ -1,5 +1,12 @@
 # -*- mode: gitignore; -*-
 
+max_parsed_id.txt
+timeline_log/
+twimg2rss.xml
+
+GPATH
+GRTAGS
+GTAGS
 
 
 *~
