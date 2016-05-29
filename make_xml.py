@@ -221,10 +221,11 @@ def make_xml():
     logger.info('total timeline count = {0}'.format(tl_count))
     logger.info('media timeline count = {0}'.format(mt_count))
 
+    log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
+        conf.log_timeline_json_dir(), datetime.datetime.now())
+    shutil.move(conf.timeline_json_file(), log_timeline_json_file)
+
     if mt_count > 0:
-        log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
-            conf.log_timeline_json_dir(), datetime.datetime.now())
-        shutil.move(conf.timeline_json_file(), log_timeline_json_file)
         shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
     else:
         logger.info('No update: {0}'.format(conf.release_rss_xml_file()))
