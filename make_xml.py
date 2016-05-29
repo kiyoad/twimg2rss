@@ -5,6 +5,7 @@ import datetime
 import jinja2
 import json
 import os
+import sqlite3
 import sys
 import shutil
 from common import conf, logger
@@ -12,6 +13,61 @@ from common import conf, logger
 RSS_TITLE = 'twimg2rss'
 RSS_DESC = 'Images in my Twitter home timeline'
 RSS_TEMPLATE_J2_FILE = 'twimg2rss.xml.j2'
+
+
+def _open_sqlite3(url_db_file):
+    conn = sqlite3.connect(
+        url_db_file,
+        detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    c = conn.cursor()
+    return conn, c
+
+
+def open_url_db():
+    url_db_file = conf.url_db_file()
+    if os.path.isfile(url_db_file):
+        conn, c = _open_sqlite3(url_db_file)
+
+    else:
+        conn, c = _open_sqlite3(url_db_file)
+        c.execute('CREATE TABLE urls (url TEXT, updated TIMESTAMP)')
+        c.execute('CREATE INDEX url_index ON urls(url, updated)')
+
+    return conn, c
+
+
+def close_url_db(conn, c):
+    c.close()
+    conn.close()
+
+
+def url_in_db(url, c):
+    c.execute('SELECT * FROM urls WHERE url == ?', (url,))
+    return c.fetchone() is not None
+
+
+def add_url_to_db(url, updated, c):
+    c.execute('INSERT INTO urls(url, updated) VALUES (?, ?)', (url, updated))
+
+
+def clear_old_db_data(c):
+    reference = datetime.datetime.now() - datetime.timedelta(
+        seconds=conf.url_db_period())
+    c.execute('DELETE FROM urls WHERE updated < ?', (reference,))
+
+
+def delete_duplicate(url_expurl_dic, c):
+    urls = url_expurl_dic.values()
+    for url in urls:
+        if url_in_db(url, c):
+            logger.info('delete duplicate URL: {0}'.format(url))
+            return False
+
+    now = datetime.datetime.now()
+    for url in urls:
+        add_url_to_db(url, now, c)
+
+    return True
 
 
 def ng_word_check(tweet, url_expurl_dic):
@@ -22,21 +78,6 @@ def ng_word_check(tweet, url_expurl_dic):
         for v in values:
             if ngw in v:
                 return False
-
-    return True
-
-
-all_url_set = set()
-
-
-def delete_duplicate(url_expurl_dic):
-    urls = url_expurl_dic.values()
-    for url in urls:
-        if url in all_url_set:
-            return False
-
-    for url in urls:
-        all_url_set.add(url)
 
     return True
 
@@ -78,6 +119,7 @@ def parse_timeline(req_text, media_timeline_list):
     tl_count = len(timeline)
     max_parsed_id = 0
     newest_created_at = datetime.datetime.now()
+    conn, c = open_url_db()
     for tweet in timeline:
         if max_parsed_id == 0:
             max_parsed_id = tweet['id']
@@ -96,9 +138,13 @@ def parse_timeline(req_text, media_timeline_list):
         parse_urls_entities(tweet['entities'], url_expurl_dic)
 
         if len(media_urls_list) > 0 and ng_word_check(
-                tweet, url_expurl_dic) and delete_duplicate(url_expurl_dic):
+                tweet, url_expurl_dic) and delete_duplicate(url_expurl_dic, c):
             create_media_timeline_item(media_timeline_list,
                                        tweet, media_urls_list, url_expurl_dic)
+
+    clear_old_db_data(c)
+    conn.commit()
+    close_url_db(conn, c)
 
     return max_parsed_id, newest_created_at, tl_count
 
@@ -175,10 +221,13 @@ def make_xml():
     logger.info('total timeline count = {0}'.format(tl_count))
     logger.info('media timeline count = {0}'.format(mt_count))
 
-    log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
-        conf.log_timeline_json_dir(), datetime.datetime.now())
-    shutil.move(conf.timeline_json_file(), log_timeline_json_file)
-    shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
+    if mt_count > 0:
+        log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
+            conf.log_timeline_json_dir(), datetime.datetime.now())
+        shutil.move(conf.timeline_json_file(), log_timeline_json_file)
+        shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
+    else:
+        logger.info('No update: {0}'.format(conf.release_rss_xml_file()))
 
 
 def main():

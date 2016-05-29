@@ -55,6 +55,12 @@ class MyConfig:
         return self.config.get('DEFAULT', 'ng_word_list',
                                fallback='').splitlines()
 
+    def url_db_file(self):
+        return self.config.get('DEFAULT', 'url_db_file')
+
+    def url_db_period(self):
+        return int(self.config.get('DEFAULT', 'url_db_period'))
+
 
 conf = MyConfig()
 
