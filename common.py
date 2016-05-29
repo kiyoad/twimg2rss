@@ -46,7 +46,7 @@ class MyConfig:
         return self.config.get('DEFAULT', 'homepage_url')
 
     def time_difference_from_utc(self):
-        return self.config.get('DEFAULT', 'time_difference_from_utc')
+        return int(self.config.get('DEFAULT', 'time_difference_from_utc'))
 
     def log_file(self):
         return self.config.get('DEFAULT', 'log_file')

@@ -114,7 +114,7 @@ def create_rss_xml_items(media_timeline_list, rss_xml_items):
             item['screen_name'], tmpl.render(text=item['name']))
         dt = '{0:%Y/%m/%d %H:%M:%S}'.format(
             item['created_at'] + datetime.timedelta(
-                hours=int(conf.time_difference_from_utc())))
+                hours=conf.time_difference_from_utc()))
         rss_xml_item['header'] = '{0} @{1} {2}'.format(
             header_name, item['screen_name'], dt)
         rss_xml_item['pubdate'] = '{0:%a, %d %b %Y %H:%M:%S +0000}'.format(
