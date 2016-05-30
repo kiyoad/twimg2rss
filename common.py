@@ -61,6 +61,12 @@ class MyConfig:
     def url_db_period(self):
         return int(self.config.get('DEFAULT', 'url_db_period'))
 
+    def timeline_db_file(self):
+        return self.config.get('DEFAULT', 'timeline_db_file')
+
+    def timeline_db_period(self):
+        return int(self.config.get('DEFAULT', 'timeline_db_period'))
+
 
 conf = MyConfig()
 

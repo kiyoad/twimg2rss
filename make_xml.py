@@ -9,6 +9,7 @@ import sys
 import shutil
 from common import conf, logger
 from url_db import url_db
+from timeline_db import timeline_db
 
 RSS_TITLE = 'twimg2rss'
 RSS_DESC = 'Images in my Twitter home timeline'
@@ -106,7 +107,7 @@ def parse_timeline(req_text, media_timeline_list):
     return max_parsed_id, newest_created_at, tl_count
 
 
-def create_rss_xml_items(media_timeline_list, rss_xml_items):
+def create_rss_xml_items(media_timeline_list):
     tmpl = jinja2.Template('{{ text }}', autoescape=True)
     for item in media_timeline_list:
         rss_xml_item = {}
@@ -115,9 +116,9 @@ def create_rss_xml_items(media_timeline_list, rss_xml_items):
             item['screen_name'], item['id'])
         header_name = '<a href=\'https://twitter.com/{0}\'>{1}</a>'.format(
             item['screen_name'], tmpl.render(text=item['name']))
-        dt = '{0:%Y/%m/%d %H:%M:%S}'.format(
-            item['created_at'] + datetime.timedelta(
-                hours=conf.time_difference_from_utc()))
+        created = item['created_at'] + datetime.timedelta(
+                                 hours=conf.time_difference_from_utc())
+        dt = '{0:%Y/%m/%d %H:%M:%S}'.format(created)
         rss_xml_item['header'] = '{0} @{1} {2}'.format(
             header_name, item['screen_name'], dt)
         rss_xml_item['pubdate'] = '{0:%a, %d %b %Y %H:%M:%S +0000}'.format(
@@ -133,7 +134,7 @@ def create_rss_xml_items(media_timeline_list, rss_xml_items):
                 k, '<a href=\'{0}\'>{0}</a>'.format(v))
         rss_xml_item['text'] = main_text
         rss_xml_item['images'] = item['media_urls']
-        rss_xml_items.append(rss_xml_item)
+        timeline_db.add_item(rss_xml_item, created)
 
 
 def create_rss_xml(rss_xml_items, tmpl, newest_created_at, file):
@@ -166,8 +167,18 @@ def make_xml():
 
     mt_count = len(media_timeline_list)
 
+    timeline_db.open()
+    create_rss_xml_items(media_timeline_list)
+
     rss_xml_items = []
-    create_rss_xml_items(media_timeline_list, rss_xml_items)
+    timeline_db.prepare_get_items()
+    while True:
+        item = timeline_db.get_item()
+        if item is None:
+            break
+        rss_xml_items.append(item)
+
+    timeline_db.close()
 
     with open(conf.rss_xml_file(), 'w') as file:
         create_rss_xml(rss_xml_items, tmpl, newest_created_at, file)
