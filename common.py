@@ -67,6 +67,9 @@ class MyConfig:
     def timeline_db_period(self):
         return int(self.config.get('DEFAULT', 'timeline_db_period'))
 
+    def rss_xml_limit(self):
+        return int(self.config.get('DEFAULT', 'rss_xml_limit'))
+
 
 conf = MyConfig()
 

@@ -172,7 +172,7 @@ def make_xml():
 
     rss_xml_items = []
     timeline_db.prepare_get_items()
-    while True:
+    for i in range(conf.rss_xml_limit()):
         item = timeline_db.get_item()
         if item is None:
             break
@@ -196,6 +196,7 @@ def make_xml():
     if mt_count > 0:
         shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
     else:
+        # Even if you change the rss_xml_limit come here if mt_count is 0.
         logger.info('No update: {0}'.format(conf.release_rss_xml_file()))
 
 
