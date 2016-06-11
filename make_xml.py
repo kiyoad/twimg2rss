@@ -20,7 +20,7 @@ def delete_duplicate(url_expurl_dic):
     urls = url_expurl_dic.values()
     for url in urls:
         if url_db.url_in_db(url):
-            logger.info('delete duplicate URL: {0}'.format(url))
+            logger.debug('delete by duplicate URL: {0}'.format(url))
             return False
 
     now = datetime.datetime.now()
@@ -34,9 +34,11 @@ def ng_word_check(tweet, url_expurl_dic):
     values = url_expurl_dic.values()
     for ngw in conf.ng_word_list():
         if ngw in tweet['text']:
+            logger.debug('delete by NG word in text: {0}'.format(ngw))
             return False
         for v in values:
             if ngw in v:
+                logger.debug('delete by NG word in URL: {0}'.format(ngw))
                 return False
 
     return True
@@ -186,8 +188,9 @@ def make_xml():
     logger.info('max_parsed_id = {0}'.format(max_parsed_id))
     logger.info('newest_created_at = {0:%Y/%m/%d %H:%M:%S}'.format(
         newest_created_at))
-    logger.info('total timeline count = {0}'.format(tl_count))
-    logger.info('media timeline count = {0}'.format(mt_count))
+    logger.info('obtained raw timeline count = {0}'.format(tl_count))
+    logger.info('added media timeline count  = {0}'.format(mt_count))
+    logger.info('total media timeline count  = {0}'.format(len(rss_xml_items)))
 
     log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
         conf.log_timeline_json_dir(), datetime.datetime.now())
