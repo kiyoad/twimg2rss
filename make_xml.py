@@ -158,6 +158,10 @@ def make_xml():
         autoescape=True)
     tmpl = jinja2_env.get_template(RSS_TEMPLATE_J2_FILE)
 
+    if not os.path.isfile(conf.timeline_json_file()):
+        logger.info('obtained raw timeline count = ZERO')
+        return
+
     with open(conf.timeline_json_file(), 'r') as file:
         req_text = file.read()
 
