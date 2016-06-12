@@ -60,20 +60,17 @@ def get_timeline():
 
             put_max_parsed_id(max_parsed_id)
 
-            logger.info('Number of tweets: {0}'.format(tweets_count))
-            if 'x-rate-limit-remaining' in req.headers:
-                limit = req.headers['x-rate-limit-remaining']
-                logger.info('API remain: {0}'.format(limit))
-            if 'x-rate-limit-reset' in req.headers:
-                reset = req.headers['x-rate-limit-reset']
-                utc = datetime.datetime.utcfromtimestamp(int(reset))
-                logger.info(
-                    'API reset: {0:%a, %d %b %Y %H:%M:%S +0000}'.format(utc))
+        logger.info('Number of tweets: {0}'.format(tweets_count))
+        if 'x-rate-limit-remaining' in req.headers:
+            limit = req.headers['x-rate-limit-remaining']
+            logger.info('API remain: {0}'.format(limit))
+        if 'x-rate-limit-reset' in req.headers:
+            reset = req.headers['x-rate-limit-reset']
+            utc = datetime.datetime.utcfromtimestamp(int(reset))
+            logger.info(
+                'API reset: {0:%a, %d %b %Y %H:%M:%S +0000}'.format(utc))
 
-            return True
-        else:
-            logger.info('Number of tweets: {0}'.format(tweets_count))
-            return True
+        return True
 
     else:
         logger.info('HTTP Status Code: {0}'.format(req.status_code))
