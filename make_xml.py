@@ -160,7 +160,7 @@ def make_xml():
 
     if not os.path.isfile(conf.timeline_json_file()):
         logger.info('obtained raw timeline count = ZERO')
-        return
+        return 0
 
     with open(conf.timeline_json_file(), 'r') as file:
         req_text = file.read()
@@ -169,7 +169,7 @@ def make_xml():
     max_parsed_id, newest_created_at, tl_count = parse_timeline(
         req_text, media_timeline_list)
     if max_parsed_id == 0:
-        return
+        return 0
 
     mt_count = len(media_timeline_list)
 
@@ -196,15 +196,7 @@ def make_xml():
     logger.info('added media timeline count  = {0}'.format(mt_count))
     logger.info('total media timeline count  = {0}'.format(len(rss_xml_items)))
 
-    log_timeline_json_file = '{0}/timeline_{1:%Y%m%d-%H%M%S}.json'.format(
-        conf.log_timeline_json_dir(), datetime.datetime.now())
-    shutil.move(conf.timeline_json_file(), log_timeline_json_file)
-
-    if mt_count > 0:
-        shutil.copy(conf.rss_xml_file(), conf.release_rss_xml_file())
-    else:
-        # Even if you change the rss_xml_limit come here if mt_count is 0.
-        logger.info('No update: {0}'.format(conf.release_rss_xml_file()))
+    return mt_count
 
 
 def main():
