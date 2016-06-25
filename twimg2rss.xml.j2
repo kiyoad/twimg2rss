@@ -15,12 +15,21 @@
       <guid isPermaLink='true'>{{ item.link }}</guid>
       <link><![CDATA[{{ item.link }}]]></link>
       <description><![CDATA[
-{% for url in item.images %}
         <div>
-          <img style='margin: 6px 0 6px 0; max-width: 300px; width: expression((this.width > 300) && (this.width >= this.height) ? 300: true); max-height: 300px; height: expression((this.height > 300) && (this.height >= this.width) ? 300: true); border: none;'
+        <table>
+        <tr>
+{% for url in item.images %}
+          <td>
+          <a href='{{ url }}'>
+          <img style='margin: 6px 0 6px 0; max-width: 200px; width: expression((this.width > 200) && (this.width >= this.height) ? 200: true); max-height: 200px; height: expression((this.height > 200) && (this.height >= this.width) ? 200: true); border: none;'
                 src='{{ url }}'/>
-        </div>
+          </a>
+          </td>
+{% if loop.index % 2 == 0 %}</tr><tr>{% endif %}
 {% endfor %}
+        </tr>
+        </table>
+        </div>
         <div>
         <br>{{ item.header|safe }}<br>
         </div>
