@@ -52,8 +52,14 @@ class MyConfig:
         return self.config.get('DEFAULT', 'log_file')
 
     def ng_word_list(self):
-        return self.config.get('DEFAULT', 'ng_word_list',
-                               fallback='').splitlines()
+        try:
+            with open(self.config.get('DEFAULT',
+                                      'ng_word_list_file'), 'r') as file:
+                ng_word_list_text = file.read()
+        except FileNotFoundError:
+            ng_word_list_text = ''
+
+        return ng_word_list_text.splitlines()
 
     def url_db_file(self):
         return self.config.get('DEFAULT', 'url_db_file')
