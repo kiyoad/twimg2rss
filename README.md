@@ -58,7 +58,7 @@ The config.ini and the *.py files are placed in the same directory.
 <dd>The Twitter timeline DB(sqlite3) file that updates by the timeline_json_file. The rss_xml_file is created based on this.</dd>
 
 <dt>timeline_db_period</dt>
-<dd>The period that maintain the timeline DB data. Of your Twitter time line data, from the most recent ones, toward the past, to have the data for that time period. However, the number of items can not be a more than the rss_xml_limit.</dd>
+<dd>The period(sec.) that maintain the timeline DB data. Of your Twitter time line data, from the most recent ones, toward the past, to have the data for that time period. However, the number of items can not be a more than the rss_xml_limit.</dd>
 
 <dt>rss_xml_url</dt>
 <dd>The RSS2.0 XML URL that you publish in the Internet.</dd>
@@ -73,7 +73,7 @@ The config.ini and the *.py files are placed in the same directory.
 <dd>The DB(sqlite3) file of the URL contained in the text field of Tweets. Tweets with any URLs contained in this DB is ignored. That does not create an RSS feed from this tweets. This is used when the same tweet more than one person was retweets, to leave the first one.</dd>
 
 <dt>url_db_period</dt>
-<dd>The period that maintain the URL DB data. After the unique URL appears during this period, tweets containing the same URL is ignored.</dd>
+<dd>The period(sec.) that maintain the URL DB data. After the unique URL appears during this period, tweets containing the same URL is ignored.</dd>
 
 <dt>ng_word_list_file</dt>
 <dd>The NG word list file. It is a file of the UTF-8 format, and includes a one-by-one NG word on a single line. Tweets including the NG words are ignored.</dd>
