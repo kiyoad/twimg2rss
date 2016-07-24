@@ -22,62 +22,61 @@ The settings are as follows.
 The config.ini and the *.py files are placed in the same directory.
 <dl>
 <dt>tw_consumer_key</dt>
-<dd>Your Twitter Consumer Key (API Key)</dd>
+<dd>Your Twitter Consumer Key (API Key).</dd>
 
 <dt>tw_consumer_secret</dt>
-<dd>Your Twitter Consumer Secret (API Secret)</dd>
+<dd>Your Twitter Consumer Secret (API Secret).</dd>
 
 <dt>tw_access_token</dt>
-<dd>Your Twitter Access Token</dd>
+<dd>Your Twitter Access Token.</dd>
 
 <dt>tw_access_token_secret</dt>
-<dd>Your Twitter Access Token Secret</dd>
+<dd>Your Twitter Access Token Secret.</dd>
 
 <dt>log_file</dt>
-<dd>The twimg2rss log file</dd>
+<dd>The twimg2rss log file.</dd>
 
 <dt>max_parsed_id_file</dt>
 <dd>The maximum number of processed Twitter ID savedfile. Automatically savedfile will be created if it does not exist.</dd>
 
 <dt>timeline_json_file</dt>
-<dd>Your Twitter timeline savedfile. Use Twitter API [GET statuses/home_timeline](https://dev.twitter.com/rest/reference/get/statuses/home_timeline)</dd>
+<dd>Your Twitter timeline savedfile. Use Twitter API [GET statuses/home_timeline](https://dev.twitter.com/rest/reference/get/statuses/home_timeline).</dd>
 
 <dt>log_timeline_json_dir</dt>
-<dd>The Twitter timeline savedfile backup directory. filename format: timeline_YYYYmmdd-HHMMSS.json</dd>
+<dd>The Twitter timeline savedfile backup directory. filename format: timeline_YYYYmmdd-HHMMSS.json.</dd>
 
 <dt>rss_xml_file</dt>
-<dd>The RSS2.0 XML file(temporary) that twimg2rss is to create</dd>
+<dd>The RSS2.0 XML file(temporary) that is created by twimg2rss.</dd>
 
 <dt>release_rss_xml_file</dt>
-<dd>The RSS2.0 XML file to be provided by the http server(copy from temporary)</dd>
+<dd>The RSS2.0 XML file that is provided by the http server. It is copied from the temporary.</dd>
 
 <dt>rss_xml_limit</dt>
-<dd>The RSS2.0 XML item count limits</dd>
+<dd>The RSS2.0 XML item count limits in the rss_xml_file.</dd>
 
 <dt>timeline_db_file</dt>
-<dd>The Twitter timeline DB(sqlite3) file that updates by the timeline_json_file. The rss_xml_file is created based on this</dd>
+<dd>The Twitter timeline DB(sqlite3) file that updates by the timeline_json_file. The rss_xml_file is created based on this.</dd>
 
 <dt>timeline_db_period</dt>
-<dd>The period that maintain the timeline DB data. Of your Twitter time line data, from the most recent ones, toward the past, to have the data for that time period. However, the number of items can not be a more than the rss_xml_limit</dd>
+<dd>The period that maintain the timeline DB data. Of your Twitter time line data, from the most recent ones, toward the past, to have the data for that time period. However, the number of items can not be a more than the rss_xml_limit.</dd>
 
 <dt>rss_xml_url</dt>
-<dd>The RSS2.0 XML URL that you publish in the Internet</dd>
+<dd>The RSS2.0 XML URL that you publish in the Internet.</dd>
 
 <dt>homepage_url</dt>
-<dd>The homepage URL related to rss_xml_url. But where there is no need to provide the content. It may be left in the default sample index.html</dd>
+<dd>The homepage URL related to rss_xml_url. But where there is no need to provide the content. It may be left in the default sample index.html.</dd>
 
 <dt>time_difference_from_utc</dt>
-<dd>Time difference from UTC(Ex. JST: 9)</dd>
+<dd>Time difference from UTC(Ex. JST: 9).</dd>
 
 <dt>url_db_file</dt>
-<dd>The DB(sqlite3) file of the URL contained in the text field of Tweets. Tweets with any URLs contained in the this DB is ignored. That does not create an RSS feed from this tweets. This is used when the same tweet more than one person was retweets, to leave the first one</dd>
+<dd>The DB(sqlite3) file of the URL contained in the text field of Tweets. Tweets with any URLs contained in the this DB is ignored. That does not create an RSS feed from this tweets. This is used when the same tweet more than one person was retweets, to leave the first one.</dd>
 
 <dt>url_db_period</dt>
-<dd>The period that maintain the URL DB data. After the unique URL appears during this period, tweets containing the same URL is ignored</dd>
+<dd>The period that maintain the URL DB data. After the unique URL appears during this period, tweets containing the same URL is ignored.</dd>
 
 <dt>ng_word_list_file</dt>
 <dd>The NG word list file. It is a file of the UTF-8 format, and includes a one-by-one NG word on a single line. Tweets including the NG words are ignored.</dd>
-
 </dl>
 
 ## License
