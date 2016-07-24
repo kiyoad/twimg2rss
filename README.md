@@ -79,6 +79,61 @@ The config.ini and the *.py files are placed in the same directory.
 <dd>The NG word list file. It is a file of the UTF-8 format, and includes a one-by-one NG word on a single line. Tweets including the NG words are ignored.</dd>
 </dl>
 
+### Run twimg2rss
+After the modified config.ini and *.py was confirmed to be in the same directory, run the twimg2rss.py.
+```bash
+$ ./twimg2rss.py
+```
+
+If there is no error, the following files are created.
+<dl>
+<dt>max_parsed_id_file</dt>
+<dd>ASCII text file. Ex. : 757209410032676864</dd>
+
+<dt>timeline_db_file</dt>
+<dd>sqlite3 database file.</dd>
+
+<dt>url_db_file</dt>
+<dd>sqlite3 database file.</dd>
+
+<dt>rss_xml_file</dt>
+<dd>The RSS2.0 formatted XML file.</dd>
+
+<dt>release_rss_xml_file</dt>
+<dd>Same as the rss_xml_file.</dd>
+
+<dt>log_file</dt>
+<dd>UTF-8 text file.</dd>
+</dl>
+
+And the backup file of Twitter timeline savedfile is created in the log_timeline_json_dir. This file is not particularly necessary if is created the rss_xml_file. Therefore, the old files can be deleted by the crontab.
+```crontab
+0 * * * * find /your/log_timeline_json_dir/directory -mtime +7 -exec rm {} \;
+```
+
+### Notes
+Since twimg2rss is using the Twitter API that 'GET statuses / home_timeline', it can run up to 15 times in 15 minutes. If you are using a different Twitter client on the same Twitter account, this limit will be more tightly. In the API you can get tweets of up to 200. So that the new tweet does not exceed the 200 items, please adjust the interval of twimg2rss. The remaining number of times of the Twitter API is output to log_file as follows.
+```
+2016-07-24 23:43:02,895 INFO get_timeline "Number of tweets: 26"
+2016-07-24 23:43:02,895 INFO get_timeline "API remain: 13"
+2016-07-24 23:43:02,896 INFO get_timeline "API reset: Sun, 24 Jul 2016 14:53:02 +0000"
+2016-07-24 23:43:03,415 INFO make_xml "max_parsed_id = 757224560877895680"
+2016-07-24 23:43:03,415 INFO make_xml "newest_created_at = 2016/07/24 14:42:58"
+2016-07-24 23:43:03,415 INFO make_xml "obtained raw timeline count = 26"
+2016-07-24 23:43:03,416 INFO make_xml "added media timeline count  = 10"
+2016-07-24 23:43:03,416 INFO make_xml "total media timeline count  = 999"
+```
+
+The remaining 13 times in this example.
+
+twimg2rss also might be more convenient to run in crontab if you want to use the online feed reader.
+```crontab
+8,23,38,53 * * * * /your/twimg2rss/directory/twimg2rss.py
+```
+
+In this case, of course, you are already built a http server like Nginx. And the release_rss_xml_file shall file path corresponding to rss_xml_url is specified.
+
+
 ## License
 
 twimg2rss is licensed under the MIT license.
