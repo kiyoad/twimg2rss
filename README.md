@@ -43,16 +43,16 @@ The config.ini and the *.py files are placed in the same directory.
 <dd>Your Twitter timeline savedfile. Use Twitter API [GET statuses/home_timeline](https://dev.twitter.com/rest/reference/get/statuses/home_timeline).</dd>
 
 <dt>log_timeline_json_dir</dt>
-<dd>The Twitter timeline savedfile backup directory. filename format: timeline_YYYYmmdd-HHMMSS.json.</dd>
+<dd>The backup directory for Twitter timeline savedfile. filename format: timeline_YYYYmmdd-HHMMSS.json.</dd>
 
 <dt>rss_xml_file</dt>
 <dd>The RSS2.0 XML file(temporary) that is created by twimg2rss.</dd>
 
 <dt>release_rss_xml_file</dt>
-<dd>The RSS2.0 XML file that is provided by the http server. It is copied from the temporary.</dd>
+<dd>The RSS2.0 XML file that is provided by the http server. It is copied from the rss_xml_file.</dd>
 
 <dt>rss_xml_limit</dt>
-<dd>The RSS2.0 XML item count limits in the rss_xml_file.</dd>
+<dd>Limit of the number of RSS2.0 XML items in the rss_xml_file.</dd>
 
 <dt>timeline_db_file</dt>
 <dd>The Twitter timeline DB(sqlite3) file that updates by the timeline_json_file. The rss_xml_file is created based on this.</dd>
