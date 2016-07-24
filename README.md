@@ -70,7 +70,7 @@ The config.ini and the *.py files are placed in the same directory.
 <dd>Time difference from UTC(Ex. JST: 9).</dd>
 
 <dt>url_db_file</dt>
-<dd>The DB(sqlite3) file of the URL contained in the text field of Tweets. Tweets with any URLs contained in this DB is ignored. That does not create an RSS feed from this tweets. This is used when the same tweet more than one person was retweets, to leave the first one.</dd>
+<dd>The DB(sqlite3) file of the URL contained in the text field of tweets. Tweets with any URLs contained in this DB is ignored. That does not create an RSS feed from this tweets. This is used when the same tweet more than one person was retweets, to leave the first one.</dd>
 
 <dt>url_db_period</dt>
 <dd>The period(sec.) that maintain the URL DB data. After the unique URL appears during this period, tweets containing the same URL is ignored.</dd>
