@@ -108,7 +108,7 @@ If there is no error, the following files are created.
 
 And the timeline_json_file is moved to the log_timeline_json_dir. At that time the filename is changed. This file is not particularly necessary if is created the rss_xml_file. Therefore, the old files can be deleted by the crontab.
 ```crontab
-0 * * * * find /your/log_timeline_json_dir/directory -mtime +7 -exec rm {} \;
+0 * * * * find /your/log_timeline_json_dir/directory -name 'timeline_[0-9-]*.json' -mtime +7 -exec rm {} \;
 ```
 
 ### Notes
