@@ -1,6 +1,8 @@
 # twimg2rss
 Make a RSS2.0 XML file from your Twitter timeline that contains the images.
 
+![twimg2rss](https://github.com/kiyoad/twimg2rss/blob/master/.images/twimg2rss.png)
+
 ## Requirements
 twimg2rss requires the following to run:
 - Python 3.4.3+
