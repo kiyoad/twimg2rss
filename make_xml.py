@@ -32,8 +32,11 @@ def delete_duplicate(url_expurl_dic):
 
 def ng_word_check(tweet, url_expurl_dic):
     values = url_expurl_dic.values()
+    user = tweet['user']
+    at_username = '@' + user['screen_name']
+    nickname = user['name']
     for ngw in conf.ng_word_list():
-        if ngw in tweet['text']:
+        if ngw in tweet['text'] or ngw in at_username or ngw in nickname:
             logger.debug('delete by NG word in text: {0}'.format(ngw))
             return False
         for v in values:

@@ -59,7 +59,9 @@ class MyConfig:
         except FileNotFoundError:
             ng_word_list_text = ''
 
-        return ng_word_list_text.splitlines()
+        ngw_list = ng_word_list_text.splitlines()
+        return [item for item in ngw_list
+                if not (item == '' or item.isspace())]
 
     def url_db_file(self):
         return self.config.get('DEFAULT', 'url_db_file')
