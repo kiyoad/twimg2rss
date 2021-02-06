@@ -20,9 +20,9 @@
         <tr>
 {% for url in item.images %}
           <td>
-          <a href='{{ url }}'>
+          <a href='{{ url | replace("http:", "https:") }}'>
           <img style='margin: 6px 0 6px 0; max-width: 200px; width: expression((this.width > 200) && (this.width >= this.height) ? 200: true); max-height: 200px; height: expression((this.height > 200) && (this.height >= this.width) ? 200: true); border: none;'
-                src='{{ url }}'/>
+                src='{{ url | replace("http:", "https:") }}'/>
           </a>
           </td>
 {% if loop.index % 2 == 0 %}</tr><tr>{% endif %}
