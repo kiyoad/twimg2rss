@@ -5,6 +5,7 @@ import datetime
 import jinja2
 import json
 import os
+import re
 import sys
 import shutil
 from common import conf, logger
@@ -166,7 +167,9 @@ def make_xml():
         return 0
 
     with open(conf.timeline_json_file(), 'r') as file:
-        req_text = file.read()
+        req_text0 = file.read()
+
+    req_text = re.sub(r',$',']', req_text0)
 
     media_timeline_list = []
     max_parsed_id, newest_created_at, tl_count = parse_timeline(
