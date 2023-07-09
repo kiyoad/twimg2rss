@@ -78,6 +78,9 @@ class MyConfig:
     def rss_xml_limit(self):
         return int(self.config.get('DEFAULT', 'rss_xml_limit'))
 
+    def minimum_retweet_favorites(self):
+        return int(self.config.get('DEFAULT', 'minimum_retweet_favorites'))
+
 
 conf = MyConfig()
 

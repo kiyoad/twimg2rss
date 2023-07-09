@@ -31,6 +31,16 @@ def delete_duplicate(url_expurl_dic):
     return True
 
 
+def retweet_count_check(tweet):
+    if 'retweeted_status' in tweet:
+        favorite_count = tweet['retweeted_status']['favorite_count']
+        #logger.debug('favorite_count: {0}'.format(favorite_count))
+        if favorite_count < conf.minimum_retweet_favorites():
+            return False
+
+    return True
+
+
 def ng_word_check(tweet, url_expurl_dic):
     values = url_expurl_dic.values()
     user = tweet['user']
@@ -58,7 +68,10 @@ def create_media_timeline_item(media_timeline_list,
     user = tweet['user']
     item['name'] = user['name']
     item['screen_name'] = user['screen_name']
-    item['text'] = tweet['text']
+    if 'retweeted_status' in tweet:
+        item['text'] = '[{0}] {1}'.format(tweet['retweeted_status']['favorite_count'], tweet['text'])
+    else:
+        item['text'] = tweet['text']
     item['media_urls'] = media_urls_list
     item['url_expurl_dic'] = url_expurl_dic
     media_timeline_list.append(item)
@@ -103,8 +116,10 @@ def parse_timeline(req_text, media_timeline_list):
                                  url_expurl_dic)
         parse_urls_entities(tweet['entities'], url_expurl_dic)
 
-        if len(media_urls_list) > 0 and ng_word_check(
-                tweet, url_expurl_dic) and delete_duplicate(url_expurl_dic):
+        if len(media_urls_list) > 0 and \
+            ng_word_check(tweet, url_expurl_dic) and \
+            retweet_count_check(tweet) and \
+            delete_duplicate(url_expurl_dic):
             create_media_timeline_item(media_timeline_list,
                                        tweet, media_urls_list, url_expurl_dic)
 
